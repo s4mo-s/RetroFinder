@@ -34,14 +34,12 @@ namespace RetroFinder
                             new Feature
                             {
                                 Type = FeatureType.LTRLeft,
-                                Location = (ltrs[i].start, ltrs[i].end),
-                                Annotation = "Left LTR"
+                                Location = (ltrs[i].start, ltrs[i].end)
                             },
                             new Feature
                             {
                                 Type = FeatureType.LTRRight,
-                                Location = (ltrs[j].start, ltrs[j].end),
-                                Annotation = "Right LTR"
+                                Location = (ltrs[j].start, ltrs[j].end)
                             }
                         };
                         transposons.Add(transposon);
