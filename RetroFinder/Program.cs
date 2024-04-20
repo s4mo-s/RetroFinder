@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace RetroFinder
 {
@@ -6,7 +7,11 @@ namespace RetroFinder
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            string fileName = "test_sequence.fa";
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", fileName);
+
+            RetroFinder retroFinder = new RetroFinder();
+            retroFinder.Analyze(filePath);
         }
     }
 }

@@ -1,13 +1,42 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using RetroFinder.Models;
 
 namespace RetroFinder
 {
     public class RetroFinder
     {
+        private SemaphoreSlim semaphore;
+        public IEnumerable<FastaSequence> sequences;
+
         public void Analyze(string path)
         {
-            throw new NotImplementedException();
-        }
+            if (FastaUtils.Validate(path))
+                sequences = FastaUtils.Parse(path);
 
+            var sequenceAnalyses = new SequenceAnalysis();
+            semaphore = new SemaphoreSlim(5, 5);
+
+            var tasks = new List<Task>();
+
+            Parallel.ForEach(sequences, sequence =>
+            {
+                semaphore.Wait();
+                try
+                {
+                    var analysis = new SequenceAnalysis
+                    {
+                        Sequence = sequence
+                    };
+                    analysis.Analyze();
+                }
+                finally
+                {
+                    semaphore.Release();
+                }
+            });
+        }
     }
 }

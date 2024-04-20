@@ -1,6 +1,8 @@
 ﻿using RetroFinder.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace RetroFinder
 {
@@ -8,12 +10,76 @@ namespace RetroFinder
     {
         public static bool Validate(string path)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var lines = File.ReadLines(path);
+                HashSet<string> ids = new HashSet<string>();
+                foreach (var line in lines)
+                {
+                    if (line.StartsWith(">"))
+                    {
+                        if (string.IsNullOrEmpty(line.Substring(1).Trim()))
+                            return false;
+
+                        if (ids.Contains(line))
+                            return false;
+
+                        ids.Add(line);
+                    }
+                    else
+                    {
+                        if (line.Any(c => !"ACGTN".Contains(c)))
+                            return false;
+                    }
+                }
+
+                return ids.Any();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Validation of file failed: {ex.Message}");
+                return false;
+            }
         }
 
         public static IEnumerable<FastaSequence> Parse(string path)
         {
-            throw new NotImplementedException();
+            List<FastaSequence> fastaSequences = new List<FastaSequence>();
+
+            try
+            {
+                var lines = File.ReadLines(path);
+                string currentId = null;
+                string currentSequence = "";
+
+                foreach (var line in lines)
+                {
+                    if (line.StartsWith(">"))
+                    {
+                        if (!string.IsNullOrEmpty(currentId))
+                        {
+                            fastaSequences.Add(new FastaSequence(currentId, currentSequence));
+                            currentSequence = "";
+                        }
+                        currentId = line.Substring(1).Trim();
+                    }
+                    else
+                    {
+                        currentSequence += line.Trim();
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(currentId))
+                {
+                    fastaSequences.Add(new FastaSequence(currentId, currentSequence));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Reading of file failed: {ex.Message}");
+            }
+
+            return fastaSequences;
         }
     }
 }
