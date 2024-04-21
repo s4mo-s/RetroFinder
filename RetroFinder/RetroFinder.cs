@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using RetroFinder.Models;
@@ -13,8 +13,16 @@ namespace RetroFinder
 
         public void Analyze(string path)
         {
-            if (FastaUtils.Validate(path))
-                sequences = FastaUtils.Parse(path);
+            try
+            {
+                if (FastaUtils.Validate(path))
+                    sequences = FastaUtils.Parse(path);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
 
             var sequenceAnalyses = new SequenceAnalysis();
             semaphore = new SemaphoreSlim(5, 5);

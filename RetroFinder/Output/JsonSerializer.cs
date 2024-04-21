@@ -1,10 +1,9 @@
+using RetroFinder.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using RetroFinder.Models;
 
 namespace RetroFinder.Output
 {
@@ -26,24 +25,29 @@ namespace RetroFinder.Output
                 writer.WriteEndObject();
             }
         }
-        public static void GenerateJsonFiles(FastaSequence sequence, IEnumerable<Transposon> transposons)
+        public static void GenerateJsonFile(FastaSequence sequence, IEnumerable<Transposon> transposons)
         {
-            // Vytvorte cestu k výstupnému súboru s názvom rovnakým ako ID sekvencie
-            string outputPath = Path.Combine(Directory.GetCurrentDirectory(), "out", $"{sequence.Id}.json");
-
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
                 Converters = { new JsonStringEnumConverter(), new TupleConverter() }
             };
 
-            // Serializujte len nájdené transpozóny s properties, ktoré máme v kostre
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(transposons, options);
 
-            // Pretty-printnutý JSON súbor
-            string jsonString = JsonSerializer.Serialize(transposons, options);
+                string directoryPath = "out";
+                if (!Directory.Exists(directoryPath))
+                    Directory.CreateDirectory(directoryPath);
 
-            // Zapište JSON do súboru
-            File.WriteAllText(outputPath, jsonString);
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, $"{sequence.Id}.json");
+                File.WriteAllText(outputPath, jsonString);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Creation of json failed: {ex.Message}");
+            }
         }
     }
 }

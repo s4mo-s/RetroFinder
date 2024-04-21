@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Transposons>
+  <Transposon>
+    <Location Start="131" End="3760" />
+    <Features>
+      <Feature>
+        <Type>LTRLeft</Type>
+        <Location Start="131" End="352" />
+      </Feature>
+      <Feature>
+        <Type>GAG</Type>
+        <Location Start="370" End="1364" />
+      </Feature>
+      <Feature>
+        <Type>INT</Type>
+        <Location Start="1609" End="2304" />
+      </Feature>
+      <Feature>
+        <Type>LTRRight</Type>
+        <Location Start="3539" End="3760" />
+      </Feature>
+    </Features>
+  </Transposon>
+  <Transposon>
+    <Location Start="3827" End="6484" />
+    <Features>
+      <Feature>
+        <Type>LTRLeft</Type>
+        <Location Start="3827" End="4032" />
+      </Feature>
+      <Feature>
+        <Type>PROT</Type>
+        <Location Start="4035" End="4286" />
+      </Feature>
+      <Feature>
+        <Type>LTRRight</Type>
+        <Location Start="6279" End="6484" />
+      </Feature>
+    </Features>
+  </Transposon>
+</Transposons>

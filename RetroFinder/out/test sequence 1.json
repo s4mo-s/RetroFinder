@@ -15,15 +15,15 @@
       {
         "Type": "GAG",
         "Location": {
-          "start": 149,
-          "end": 1143
+          "start": 370,
+          "end": 1364
         }
       },
       {
         "Type": "INT",
         "Location": {
-          "start": 1388,
-          "end": 2083
+          "start": 1609,
+          "end": 2304
         }
       },
       {
@@ -51,8 +51,8 @@
       {
         "Type": "PROT",
         "Location": {
-          "start": 3830,
-          "end": 4081
+          "start": 4035,
+          "end": 4286
         }
       },
       {

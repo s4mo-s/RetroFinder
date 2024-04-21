@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 
 namespace RetroFinder
 {
@@ -8,11 +6,18 @@ namespace RetroFinder
     {
         static void Main(string[] args)
         {
-            string fileName = "test_sequence.fa";
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Data", fileName);
+            try
+            {
+                ArgumentParser.ParseArguments(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
 
             RetroFinder retroFinder = new RetroFinder();
-            retroFinder.Analyze(path);
+            retroFinder.Analyze(ArgumentParser.path);
         }
     }
 }
