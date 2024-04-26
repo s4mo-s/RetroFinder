@@ -1,4 +1,5 @@
 ﻿using RetroFinder.Models;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,28 +10,38 @@ namespace RetroFinder
     {
         public static bool Validate(string path)
         {
-            var lines = File.ReadLines(path);
             HashSet<string> ids = new HashSet<string>();
+            var lines = File.ReadLines(path);
+            if (lines.Count() < 2)
+                throw new Exception("File validation: file must contain at least one ID with sequence");
+            if (lines.Count() % 2 == 1)
+                throw new Exception("File validation: missing pair of ID with sequence");
+
             foreach (var line in lines)
             {
                 if (line.StartsWith(">"))
                 {
-                    if (string.IsNullOrEmpty(line.Substring(1).Trim()))
-                        return false;
+                    string id = line.Substring(1).Trim();
 
-                    if (ids.Contains(line))
-                        return false;
+                    if (string.IsNullOrEmpty(id))
+                        throw new Exception("File validation: ID is empty");
 
-                    ids.Add(line);
+                    if (ids.Contains(id))
+                        throw new Exception($"File validation: {id} is not unique");
+
+                    ids.Add(id);
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(line.Trim()))
+                        throw new Exception($"File validation: sequence of {ids.Last()} is empty");
+
                     if (line.Any(c => !"ACGTN".Contains(c)))
-                        return false;
+                        throw new Exception($"File validation: sequence of {ids.Last()} contains invalid characters");
                 }
             }
 
-            return ids.Any();
+            return ids.Count != 0;
         }
 
         public static IEnumerable<FastaSequence> Parse(string path)

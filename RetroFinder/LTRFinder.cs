@@ -53,7 +53,6 @@ namespace RetroFinder
         private static List<(int start, int end, string sequence)> FindLTRs(string sequence)
         {
             List<(int start, int end, string sequence)> ltrs = new List<(int start, int end, string sequence)>();
-
             string pattern = @"([ACGT]{100,300}).{1000,3500}(\1)";
             MatchCollection matches = Regex.Matches(sequence, pattern);
 

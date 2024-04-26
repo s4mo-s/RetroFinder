@@ -10,25 +10,30 @@ namespace RetroFinder.Domains
         public IEnumerable<Feature> PickDomains()
         {
             List<Feature> selectedDomains = new List<Feature>();
-
-            // Define the typical domain order
             FeatureType[] typicalOrder = { FeatureType.GAG, FeatureType.PROT, FeatureType.INT, FeatureType.RT, FeatureType.RH };
+            int lastEnd = -1;
 
             foreach (var domainType in typicalOrder)
             {
-                // Find the best match for each domain type
-                var bestMatch = identifiedDomains
-                    .Where(d => d.Item1.Type == domainType)
-                    .OrderByDescending(d => d.Item2) // Order by alignment score (higher is better)
-                    .FirstOrDefault();
+                // Get all domains of the current type
+                var domainsOfType = identifiedDomains.Where(x => x.Item1.Type == domainType).OrderByDescending(x => x.Item2).ToList();
 
-                // Add the best match to selected domains if it does not overlap with existing ones
-                if (bestMatch.Item1 != null && !selectedDomains.Any(d => d.Location.end > bestMatch.Item1.Location.start))
+                foreach (var domain in domainsOfType)
                 {
-                    selectedDomains.Add(bestMatch.Item1);
+                    if (domain.Item1.Location.start > lastEnd)
+                    {
+                        selectedDomains.Add(domain.Item1);
+                        lastEnd = domain.Item1.Location.end;
+
+                        //Console.WriteLine($"Selected domain: {domain.Item1.Type} ({domain.Item1.Location.start}, {domain.Item1.Location.end})");
+                        break;
+                    }
+                    else
+                    {
+                        //Console.WriteLine($"Domain {domain.Item1.Type} overlaps and is not picked.");
+                    }
                 }
             }
-
             return selectedDomains;
         }
     }

@@ -1,15 +1,12 @@
-using RetroFinder.Models;
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace RetroFinder.Output
 {
-    public class JsonOutputGenerator
+    public class JsonOutputGenerator : ISerializer
     {
-
         public class TupleConverter : JsonConverter<(int, int)>
         {
             public override (int, int) Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -25,28 +22,27 @@ namespace RetroFinder.Output
                 writer.WriteEndObject();
             }
         }
-        public static void GenerateJsonFile(FastaSequence sequence, IEnumerable<Transposon> transposons)
+        public void SerializeAnalysisResult(SequenceAnalysis sequenceAnalysis)
         {
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Converters = { new JsonStringEnumConverter(), new TupleConverter() }
-            };
-
             try
             {
-                string jsonString = JsonSerializer.Serialize(transposons, options);
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    Converters = { new JsonStringEnumConverter(), new TupleConverter() }
+                };
+                string jsonString = JsonSerializer.Serialize(sequenceAnalysis.Transposons, options);
 
                 string directoryPath = "out";
                 if (!Directory.Exists(directoryPath))
                     Directory.CreateDirectory(directoryPath);
 
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, $"{sequence.Id}.json");
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, $"{sequenceAnalysis.Sequence.Id}.json");
                 File.WriteAllText(outputPath, jsonString);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Creation of json failed: {ex.Message}");
+                throw new Exception($"creation of json failed({ex.Message})");
             }
         }
     }

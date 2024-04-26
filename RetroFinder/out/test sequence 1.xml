@@ -9,11 +9,11 @@
       </Feature>
       <Feature>
         <Type>GAG</Type>
-        <Location Start="370" End="1364" />
+        <Location Start="369" End="1364" />
       </Feature>
       <Feature>
-        <Type>INT</Type>
-        <Location Start="1609" End="2304" />
+        <Type>PROT</Type>
+        <Location Start="2510" End="2846" />
       </Feature>
       <Feature>
         <Type>LTRRight</Type>
@@ -29,8 +29,16 @@
         <Location Start="3827" End="4032" />
       </Feature>
       <Feature>
+        <Type>GAG</Type>
+        <Location Start="4051" End="5027" />
+      </Feature>
+      <Feature>
         <Type>PROT</Type>
-        <Location Start="4035" End="4286" />
+        <Location Start="5162" End="5480" />
+      </Feature>
+      <Feature>
+        <Type>RH</Type>
+        <Location Start="5859" End="6278" />
       </Feature>
       <Feature>
         <Type>LTRRight</Type>

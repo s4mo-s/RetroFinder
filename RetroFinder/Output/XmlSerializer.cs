@@ -1,36 +1,29 @@
-using RetroFinder.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
 namespace RetroFinder.Output
 {
-    public class XmlOutputGenerator
+    public class XmlOutputGenerator : ISerializer
     {
-
-        public static void GenerateXmlFile(FastaSequence sequence, IEnumerable<Transposon> transposons)
+        public void SerializeAnalysisResult(SequenceAnalysis analysis)
         {
-            XmlWriterSettings settings = new XmlWriterSettings
-            {
-                Indent = true,
-                IndentChars = "  "
-            };
-
             try
             {
                 string directoryPath = "out";
                 if (!Directory.Exists(directoryPath))
                     Directory.CreateDirectory(directoryPath);
 
-                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, $"{sequence.Id}.xml");
+                string outputPath = Path.Combine(Directory.GetCurrentDirectory(), directoryPath, $"{analysis.Sequence.Id}.xml");
+
+                XmlWriterSettings settings = new XmlWriterSettings { Indent = true };
 
                 using (XmlWriter writer = XmlWriter.Create(outputPath, settings))
                 {
                     // Root
                     writer.WriteStartElement("Transposons");
 
-                    foreach (var transposon in transposons)
+                    foreach (var transposon in analysis.Transposons)
                     {
                         // Transposon
                         writer.WriteStartElement("Transposon");
@@ -66,7 +59,7 @@ namespace RetroFinder.Output
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Creation of xml failed: {ex.Message}");
+                throw new Exception($"creation of xml failed({ex.Message})");
             }
         }
     }
